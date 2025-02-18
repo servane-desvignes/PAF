@@ -1,0 +1,141 @@
+/**
+ * Flocking
+ * by Daniel Shiffman.
+ *
+ * An implementation of Craig Reynold's Boids program to simulate
+ * the flocking behavior of birds. Each boid steers itself based on
+ * rules of avoidance, alignment, and coherence.
+ *
+ * Click the mouse to add a new boid.
+ */
+
+
+
+
+Savana savana;
+Box[] carre = new Box[3];
+
+
+
+
+void setup() {
+  size(640*2, 360*2);
+  savana = new Savana();
+  // Add an initial set of boids into the system
+  
+  for (int i = 0; i < 1 ; i++) {
+  int r1=int(random(7));
+  int r2=int(random(7));
+    savana.addBoid(new Wildebeest(r1*width/6,r1*height/6));
+     savana.addBoid(new Wildebeest(r2*width/6,r2*height/6));
+    
+  }
+ for (int i = 0; i < 4; i++){
+   int r1=int(random(7));
+  int r2=int(random(7));
+    savana.addBoid(new Cheetah(r1*width/6,r2*height/6));
+
+ }
+
+  
+
+  for (int i = 0; i < 50; i++) {
+    int r1=int(random(7));
+    int r2=int(random(7));
+    savana.addBoid(new Wildebeest(r1*width/6, r1*height/6));
+    savana.addBoid(new Wildebeest(r2*width/6, r2*height/6));
+  }
+  for (int i = 0; i < 20; i++) {
+    int r1=int(random(7));
+    int r2=int(random(7));
+    savana.addBoid(new Cheetah(r1*width/6, r2*height/6));
+  }
+  carre[0] = new Box((int) width*3/4 +20, 90); //<>//
+  carre[1] = new Box(width*3/4 +20, 140);
+  carre[2] = new Box(width*3/4 +20, 190);
+
+}
+
+void draw() {
+  background(152, 190, 100);
+  PFont Courier = createFont("Courier", 15);
+  PFont Titre = createFont("DevanagariMT-48", 30);
+  PFont sousTitre = createFont("HiraginoSans-W1-48", 25);
+  // coder pour modifier la taille de la fenetre
+
+  int Xmaxgraph = int(width-(width/4));
+  stroke(0);
+  line(Xmaxgraph, 0, Xmaxgraph, height);
+
+  // Populations initiales , couleurs a changer plus tard
+
+  textSize(20);
+  fill(0);
+  textFont(Titre);
+  text("Initial Population", width*3/4 +10, 20);
+
+
+  //proies
+  textFont(sousTitre);
+
+  fill(33, 232, 217);//cyan
+  text("Wildebeest", width*3/4 +10, 70);
+
+  fill(232, 33, 129);//rose
+  text("Zebra", width*3/4 +10, 125);
+
+  fill(4, 88, 24);//joli et clair ?
+  text("Gazelle", width*3/4 +10, 175);
+
+  //partie bar pour avoir conditions initiales :
+  fill(0);
+  line(width*3/4 +20, 90, width*3/4 +300, 90);
+  line(width*3/4 +20, 140, width*3/4 +300, 140);
+  line(width*3/4 +20, 190, width*3/4 +300, 190);
+  
+  for (int i =0; i<3; i++) {
+    carre[i].update();
+    carre[i].display();
+  }
+
+  //instructions pour les prédateurs
+
+  fill(0);
+  textFont(Titre);
+  text("Predator Population", width*3/4 +10, height*0.35+30);
+
+  textFont(sousTitre);
+  text("Right click to add", width*3/4 +10, height*0.35+80);
+  text("a cheetah", width*3/4 +10, height*0.35+110);
+  text("Left click to add a zebra", width*3/4 +10, height*0.35+150);
+
+  fill(0);
+
+  textFont(Titre);
+  text("Graphe et statistiques", width*3/4 +10, height*0.35+210);
+  textSize(15);
+  textFont(Courier);
+  text("A completer", width*3/4 +10, height*0.25*3+30);
+  text("Cheetah   "+(float) savana.NumberOfCheetahs()/savana.size()+"    "+savana.NumberOfCheetahs()+"/"+savana.size(), width*3/4 +10, height*0.25*3+60);
+  text("Wildebeest   "+(float) savana.NumberOfWildebeests()/savana.size()+"    "+savana.NumberOfWildebeests()+"/"+savana.size(), width*3/4 +10, height*0.25*3+80);
+  text("Zebras   "+(float) savana.NumberOfZebras()/savana.size()+"    "+savana.NumberOfZebras()+"/"+savana.size(), width*3/4 +10, height*0.25*3+100);
+
+
+  stroke(0, 255, 0);
+
+  savana.run();
+}
+
+
+void mouseClicked() {
+  if (mouseButton==LEFT) {
+    savana.addBoid(new Zebra(mouseX, mouseY));
+  } else if (mouseButton == RIGHT) {
+    savana.addBoid(new Cheetah(mouseX, mouseY));
+  }
+}
+
+void keyPressed() {
+  int total = savana.number();
+  println("The total number of animals is: " + total);
+}
